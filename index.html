@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI搭子 — 内容创作者AI协作助手</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+
+  <!-- App Container -->
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span class="logo-icon">🎯</span>
+          <div class="logo-text">
+            <span class="logo-title">AI搭子</span>
+            <span class="logo-subtitle">创作者协作助手</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="editor">
+          <span class="nav-icon">✍️</span>
+          <span class="nav-label">写作助手</span>
+          <span class="nav-badge" id="draft-count">0</span>
+        </button>
+        <button class="nav-item" data-tab="calendar">
+          <span class="nav-icon">📅</span>
+          <span class="nav-label">内容日历</span>
+        </button>
+        <button class="nav-item" data-tab="analysis">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">内容分析</span>
+        </button>
+        <button class="nav-item" data-tab="export">
+          <span class="nav-icon">📤</span>
+          <span class="nav-label">一键导出</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="usage-info">
+          <span class="usage-label">今日AI使用</span>
+          <div class="usage-bar">
+            <div class="usage-fill" id="usage-fill"></div>
+          </div>
+          <span class="usage-count" id="usage-count">0/3</span>
+        </div>
+        <div class="pro-badge">免费版</div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Editor Tab -->
+      <section class="tab-content active" id="tab-editor">
+        <div class="editor-layout">
+          <!-- Editor Panel -->
+          <div class="editor-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">创作编辑器</h2>
+              <div class="panel-actions">
+                <button class="btn btn-ghost btn-sm" id="btn-new-doc" title="新建文档">📄 新建</button>
+                <button class="btn btn-ghost btn-sm" id="btn-save-draft" title="保存草稿">💾 保存</button>
+                <select class="platform-select" id="platform-select">
+                  <option value="wechat">公众号</option>
+                  <option value="xiaohongshu">小红书</option>
+                  <option value="douyin">抖音</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="editor-header">
+              <input type="text" class="title-input" id="title-input" placeholder="输入文章标题...">
+            </div>
+
+            <div class="editor-body">
+              <textarea class="editor-textarea" id="editor-textarea" placeholder="开始创作你的内容...&#10;&#10;💡 提示：在右侧使用AI工具辅助写作，或点击下方平台标签预览不同平台格式。"></textarea>
+            </div>
+
+            <div class="editor-footer">
+              <div class="word-count" id="word-count">字数：0</div>
+              <div class="editor-status" id="editor-status">
+                <span class="status-dot"></span>
+                <span>就绪</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Assistant Panel -->
+          <div class="ai-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">🤖 AI写作助手</h2>
+              <span class="demo-badge">演示模式</span>
+            </div>
+
+            <div class="ai-actions">
+              <button class="ai-btn" data-action="continue" id="ai-continue">
+                <span class="ai-btn-icon">➡️</span>
+                <div class="ai-btn-info">
+                  <span class="ai-btn-title">续写</span>
+                  <span class="ai-btn-desc">从当前内容继续创作</span>
+                </div>
+              </button>
+              <button class="ai-btn" data-action="rewrite" id="ai-rewrite">
+                <span class="ai-btn-icon">🔄</span>
+                <div class="ai-btn-info">
+                  <span class="ai-btn-title">改写</span>
+                  <span class="ai-btn-desc">换个方式表达相同意思</span>
+                </div>
+              </button>
+              <button class="ai-btn" data-action="expand" id="ai-expand">
+                <span class="ai-btn-icon">📈</span>
+                <div class="ai-btn-info">
+                  <span class="ai-btn-title">扩写</span>
+                  <span class="ai-btn-desc">丰富细节，增加篇幅</span>
+                </div>
+              </button>
+              <button class="ai-btn" data-action="shorten" id="ai-shorten">
+                <span class="ai-btn-icon">📉</span>
+                <div class="ai-btn-info">
+                  <span class="ai-btn-title">缩写</span>
+                  <span class="ai-btn-desc">精简内容，保留核心</span>
+                </div>
+              </button>
+              <button class="ai-btn" data-action="title" id="ai-title">
+                <span class="ai-btn-icon">💡</span>
+                <div class="ai-btn-info">
+                  <span class="ai-btn-title">标题生成</span>
+                  <span class="ai-btn-desc">生成多个爆款标题</span>
+                </div>
+              </button>
+              <button class="ai-btn" data-action="polish" id="ai-polish">
+                <span class="ai-btn-icon">✨</span>
+                <div class="ai-btn-info">
+                  <span class="ai-btn-title">润色</span>
+                  <span class="ai-btn-desc">优化文采和流畅度</span>
+                </div>
+              </button>
+            </div>
+
+            <!-- AI Result Display -->
+            <div class="ai-result" id="ai-result" style="display:none;">
+              <div class="ai-result-header">
+                <span class="ai-result-label" id="ai-result-label">AI建议</span>
+                <div class="ai-result-actions">
+                  <button class="btn btn-ghost btn-xs" id="btn-apply">✅ 应用</button>
+                  <button class="btn btn-ghost btn-xs" id="btn-dismiss">✕</button>
+                </div>
+              </div>
+              <div class="ai-result-content" id="ai-result-content"></div>
+            </div>
+          </div>
+
+          <!-- Platform Preview Panel -->
+          <div class="preview-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">📱 平台预览</h2>
+              <div class="preview-tabs">
+                <button class="preview-tab active" data-platform="wechat">公众号</button>
+                <button class="preview-tab" data-platform="xiaohongshu">小红书</button>
+                <button class="preview-tab" data-platform="douyin">抖音</button>
+              </div>
+            </div>
+            <div class="preview-body">
+              <div class="preview-frame" id="preview-frame">
+                <div class="preview-placeholder">
+                  <span class="preview-placeholder-icon">👆</span>
+                  <p>开始写作，这里会实时显示<br>各平台的预览效果</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Calendar Tab -->
+      <section class="tab-content" id="tab-calendar">
+        <div class="calendar-layout">
+          <!-- Topic Library -->
+          <div class="calendar-panel topic-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">💡 选题库</h2>
+              <button class="btn btn-primary btn-sm" id="btn-add-topic">+ 新选题</button>
+            </div>
+
+            <!-- Add Topic Form -->
+            <div class="add-topic-form" id="add-topic-form" style="display:none;">
+              <input type="text" class="form-input" id="topic-title-input" placeholder="选题标题">
+              <textarea class="form-textarea" id="topic-desc-input" placeholder="选题描述（可选）" rows="2"></textarea>
+              <div class="form-row">
+                <input type="date" class="form-input" id="topic-date-input">
+                <select class="form-select" id="topic-platform">
+                  <option value="wechat">公众号</option>
+                  <option value="xiaohongshu">小红书</option>
+                  <option value="douyin">抖音</option>
+                  <option value="all">全平台</option>
+                </select>
+                <select class="form-select" id="topic-status">
+                  <option value="idea">灵感</option>
+                  <option value="planned">计划中</option>
+                  <option value="writing">写作中</option>
+                </select>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-primary btn-sm" id="btn-save-topic">保存选题</button>
+                <button class="btn btn-ghost btn-sm" id="btn-cancel-topic">取消</button>
+              </div>
+            </div>
+
+            <!-- Topic List -->
+            <div class="topic-list" id="topic-list">
+              <div class="empty-state">
+                <span class="empty-icon">📝</span>
+                <p>还没有选题</p>
+                <p class="empty-hint">点击"+ 新选题"开始规划内容</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline View -->
+          <div class="calendar-panel timeline-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">📆 发布时间线</h2>
+            </div>
+            <div class="timeline" id="timeline">
+              <div class="empty-state">
+                <span class="empty-icon">🗓️</span>
+                <p>暂无排期内容</p>
+                <p class="empty-hint">为选题设置日期后，将在这里显示时间线</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Drafts -->
+          <div class="calendar-panel drafts-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">📄 草稿箱</h2>
+            </div>
+            <div class="draft-list" id="draft-list">
+              <div class="empty-state">
+                <span class="empty-icon">📭</span>
+                <p>草稿箱为空</p>
+                <p class="empty-hint">在编辑器中保存草稿后，将在这里显示</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analysis Tab -->
+      <section class="tab-content" id="tab-analysis">
+        <div class="analysis-layout">
+          <div class="analysis-input-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">📊 内容分析</h2>
+              <button class="btn btn-primary btn-sm" id="btn-analyze">🔍 分析内容</button>
+            </div>
+            <textarea class="analysis-textarea" id="analysis-textarea" placeholder="粘贴或输入需要分析的内容...&#10;&#10;AI将自动分析标题质量、关键词、最佳发布时间等。"></textarea>
+          </div>
+
+          <div class="analysis-results" id="analysis-results">
+            <!-- Title Score -->
+            <div class="analysis-card">
+              <h3 class="analysis-card-title">🏆 标题评分</h3>
+              <div class="score-display" id="title-score-display">
+                <div class="score-circle">
+                  <svg class="score-ring" viewBox="0 0 120 120">
+                    <circle class="score-ring-bg" cx="60" cy="60" r="52"/>
+                    <circle class="score-ring-fill" cx="60" cy="60" r="52" id="score-ring-fill"/>
+                  </svg>
+                  <div class="score-value" id="score-value">--</div>
+                </div>
+                <div class="score-details" id="score-details"></div>
+              </div>
+            </div>
+
+            <!-- Keywords -->
+            <div class="analysis-card">
+              <h3 class="analysis-card-title">🔑 关键词建议</h3>
+              <div class="keywords-cloud" id="keywords-cloud">
+                <span class="keyword-empty">粘贴内容后点击"分析内容"</span>
+              </div>
+            </div>
+
+            <!-- Publish Time -->
+            <div class="analysis-card">
+              <h3 class="analysis-card-title">⏰ 最佳发布时间</h3>
+              <div class="publish-time" id="publish-time">
+                <span class="time-empty">等待分析...</span>
+              </div>
+            </div>
+
+            <!-- Content Stats -->
+            <div class="analysis-card">
+              <h3 class="analysis-card-title">📈 内容统计</h3>
+              <div class="content-stats" id="content-stats">
+                <div class="stat-item">
+                  <span class="stat-label">字数</span>
+                  <span class="stat-value">--</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">段落</span>
+                  <span class="stat-value">--</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">阅读时长</span>
+                  <span class="stat-value">--</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">可读性</span>
+                  <span class="stat-value">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Export Tab -->
+      <section class="tab-content" id="tab-export">
+        <div class="export-layout">
+          <div class="export-header">
+            <h2 class="panel-title">📤 一键多平台导出</h2>
+            <p class="export-subtitle">将内容自动适配各平台格式，一键复制发布</p>
+          </div>
+
+          <div class="export-grid">
+            <div class="export-card">
+              <div class="export-card-header">
+                <span class="export-platform-icon">🟢</span>
+                <h3>公众号格式</h3>
+                <span class="export-limit">适合1000-3000字</span>
+              </div>
+              <div class="export-preview" id="export-wechat">
+                <div class="export-placeholder">请在编辑器中创作内容</div>
+              </div>
+              <button class="btn btn-primary export-copy-btn" data-platform="wechat">
+                📋 复制公众号格式
+              </button>
+              <span class="copy-toast" id="toast-wechat">已复制！</span>
+            </div>
+
+            <div class="export-card">
+              <div class="export-card-header">
+                <span class="export-platform-icon">🔴</span>
+                <h3>小红书格式</h3>
+                <span class="export-limit">适合500-1000字</span>
+              </div>
+              <div class="export-preview" id="export-xiaohongshu">
+                <div class="export-placeholder">请在编辑器中创作内容</div>
+              </div>
+              <button class="btn btn-primary export-copy-btn" data-platform="xiaohongshu">
+                📋 复制小红书格式
+              </button>
+              <span class="copy-toast" id="toast-xiaohongshu">已复制！</span>
+            </div>
+
+            <div class="export-card">
+              <div class="export-card-header">
+                <span class="export-platform-icon">🎵</span>
+                <h3>抖音格式</h3>
+                <span class="export-limit">适合150-500字</span>
+              </div>
+              <div class="export-preview" id="export-douyin">
+                <div class="export-placeholder">请在编辑器中创作内容</div>
+              </div>
+              <button class="btn btn-primary export-copy-btn" data-platform="douyin">
+                📋 复制抖音格式
+              </button>
+              <span class="copy-toast" id="toast-douyin">已复制！</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-global" id="toast-global"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
